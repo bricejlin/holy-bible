@@ -1,0 +1,38 @@
+{
+  "name": "holy-bible",
+  "version": "0.0.1",
+  "description": "A small library providing access to the Bible",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bricejlin/holy-bible.git"
+  },
+  "keywords": [
+    "bible",
+    "god",
+    "christianity",
+    "christian",
+    "scripture",
+    "word"
+  ],
+  "author": "Brice Lin <bricejlin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bricejlin/holy-bible/issues"
+  },
+  "homepage": "https://github.com/bricejlin/holy-bible",
+  "dependencies": {
+    "es6-promise": "^2.0.1",
+    "zero-fill": "~2.2.0"
+  },
+  "devDependencies": {
+    "blue-tape": "^0.1.8",
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.4",
+    "gulp-load-plugins": "^0.9.0",
+    "jshint-stylish": "^1.0.1"
+  }
+}
