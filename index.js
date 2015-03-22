@@ -3,7 +3,7 @@
 var Promise = require('es6-promise').Promise;
 var zeroFill = require('zero-fill');
 
-var BCVParser = require('./lib/Bible-Passage-Reference-Parser/js/en_bcv_parser.min').bcv_parser;
+var BCVParser = require('./lib/bcv_parser.min').bcv_parser;
 var bcv = new BCVParser();
 
 var BOOK_TO_INDEX = require('./indexes/book-index-map');
