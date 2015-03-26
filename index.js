@@ -9,8 +9,13 @@ var bcv = new BCVParser();
 var BOOK_TO_INDEX = require('./indexes/book-index-map');
 var VERSE_INDEX = require('./indexes/verse-index-map');
 
-// TODO Add option to choose bible version
-var ASV_BIBLE = require('./bibles/asv');
+var ASV = require('./bibles/asv');
+var KJV = require('./bibles/kjv');
+
+var BIBLES = {
+  'asv': ASV,
+  'kjv': KJV
+};
 
 module.exports = (function () {
   var bible = {};
@@ -19,35 +24,30 @@ module.exports = (function () {
    * Retrieve bible passages
    *
    * @param {String} psg - bible book/chapter/verse
+   * @param {String} ver - bible version
    * @return {Promise} returns String passage
    */
-  bible.get = function (psg) {
-    if (typeof psg !== 'string') {
-      throw new TypeError('Expected a string');
-    }
+  bible.get = function (psg, ver) {
+    if (typeof psg !== 'string') { throw new TypeError('Expected a string'); }
+
     var self = this;
+    var v = ver || 'asv';
     // clean/normalize psg to bcv object
     var psgBCV = bcv.parse(psg).parsed_entities()[0].entities[0];
 
-    if (!psgBCV) {
-      throw new Error('Bad bible passage input');
-    }
+    if (!psgBCV) { throw new Error('Bad bible passage input'); }
 
     return new Promise (function (res, rej) {
-      var passage;
-
       // parse psg into index ranges
       var start = self._bcvToInd(psgBCV.start);
       var end = self._bcvToInd(psgBCV.end);
+      var psg = psgBCV.osis;
+      var text = (end - start === 0) ? self._getVerses(BIBLES[v], start)
+                                        : self._getVerses(BIBLES[v], start, end);
 
-      if (end - start === 0) {
-        passage = self._getVerses(ASV_BIBLE, start);
-      } else {
-        passage = self._getVerses(ASV_BIBLE, start, end);
-      }
-
-      if (passage) {
-        res(passage);
+      if (text) {
+        var data = { version: v, passage: psg, text: text };
+        res(data);
       } else {
         rej(Error('Ahhhhh!!! Nooo!!!'));
       }
@@ -83,9 +83,7 @@ module.exports = (function () {
     var arr = [];
 
     // Return single verse if no end
-    if (!e) {
-      return bible[s];
-    }
+    if (!e) { return bible[s]; }
 
     for (var i = Number(s), len = Number(e);
            i < len + 1; i++) {
