@@ -17,7 +17,7 @@
 
   bible.get('John 15:13', 'ASV') // also supports 2-letter abbrev (ie: Jn 15:13)
     .then(function (res) {
-      console.log(res.passage);
+      console.log(res.text);
     });
 
   // Greater love hath no man than this, that a man lay down his life for his friends.
