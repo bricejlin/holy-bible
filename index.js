@@ -37,16 +37,16 @@ module.exports = (function () {
 
     if (!psgBCV) { throw new Error('Bad bible passage input'); }
 
-    return new Promise (function (res, rej) {
+    return new Promise(function (res, rej) {
       // parse psg into index ranges
       var start = self._bcvToInd(psgBCV.start);
       var end = self._bcvToInd(psgBCV.end);
-      var psg = psgBCV.osis;
+      var psgOsis = psgBCV.osis;
       var text = (end - start === 0) ? self._getVerses(BIBLES[v], start)
-                                        : self._getVerses(BIBLES[v], start, end);
+                                     : self._getVerses(BIBLES[v], start, end);
 
       if (text) {
-        var data = { version: v, passage: psg, text: text };
+        var data = { version: v, passage: psgOsis, text: text };
         res(data);
       } else {
         rej(Error('Ahhhhh!!! Nooo!!!'));
@@ -61,7 +61,7 @@ module.exports = (function () {
    * @return {String} verse index (ie: 01001001)
    */
   bible._bcvToInd = function (psg) {
-    var book = BOOK_TO_INDEX[psg.b]['b'];
+    var book = BOOK_TO_INDEX[psg.b].b;
     var b = zeroFill(2, book);
     var c = zeroFill(3, psg.c);
     var v = zeroFill(3, psg.v);
@@ -72,22 +72,22 @@ module.exports = (function () {
   /**
    * Convert book, chapter, verse object into verse index
    *
-   * @param {Object} bible - bible version object
+   * @param {Object} bVersions - bible version object
    * @param {String} start - start index
    * @param {String} end - end index
    * @return {String} bible passage
    */
-  bible._getVerses = function (bible, start, end) {
+  bible._getVerses = function (bVersions, start, end) {
     var s = VERSE_INDEX[start];
     var e = VERSE_INDEX[end];
     var arr = [];
 
     // Return single verse if no end
-    if (!e) { return bible[s]; }
+    if (!e) { return bVersions[s]; }
 
     for (var i = Number(s), len = Number(e);
            i < len + 1; i++) {
-      arr.push(bible[i]);
+      arr.push(bVersions[i]);
     }
 
     return arr.join(' ');
