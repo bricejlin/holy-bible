@@ -3,18 +3,16 @@
 var Promise = require('es6-promise').Promise;
 var zeroFill = require('zero-fill');
 
-var BCVParser = require('./lib/bcv_parser.min').bcv_parser;
+var BCVParser =
+  require('bible-passage-reference-parser/js/en_bcv_parser').bcv_parser;
 var bcv = new BCVParser();
 
 var BOOK_TO_INDEX = require('./indexes/book-index-map');
 var VERSE_INDEX = require('./indexes/verse-index-map');
 
-var ASV = require('./bibles/asv');
-var KJV = require('./bibles/kjv');
-
 var BIBLES = {
-  'asv': ASV,
-  'kjv': KJV
+  'asv': require('./bibles/asv'),
+  'kjv': require('./bibles/kjv')
 };
 
 module.exports = (function () {
