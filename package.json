@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/bricejlin/holy-bible",
   "dependencies": {
+    "bible-passage-reference-parser": "^1.0.0",
     "es6-promise": "^2.0.1",
     "zero-fill": "~2.2.0"
   },
