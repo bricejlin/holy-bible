@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "eslint *.js test/*.js",
     "test": "node test/*.js",
-    "pretest": "npm run lint"
+    "pretest": "npm run lint",
+    "build": "babel src/index.js -o dist/holy-bible.js",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -32,7 +34,11 @@
     "zero-fill": "~2.2.0"
   },
   "devDependencies": {
+    "babel-core": "^6.0.15",
     "blue-tape": "^0.1.8",
     "eslint": "^0.24.0"
+  },
+  "babel": {
+    "presets": ["es2015"]
   }
 }
