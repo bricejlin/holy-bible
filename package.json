@@ -1,14 +1,12 @@
 {
   "name": "holy-bible",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A small library providing access to the Bible",
   "main": "index.js",
   "scripts": {
     "lint": "eslint *.js test/*.js",
     "test": "node test/*.js",
-    "pretest": "npm run lint",
-    "build": "babel src/index.js -o dist/holy-bible.js",
-    "postinstall": "npm run build"
+    "pretest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -34,12 +32,7 @@
     "zero-fill": "~2.2.0"
   },
   "devDependencies": {
-    "babel-core": "^6.0.15",
-    "babel-preset-es2015": "^6.0.15",
     "blue-tape": "^0.1.8",
     "eslint": "^0.24.0"
-  },
-  "babel": {
-    "presets": ["es2015"]
   }
 }
