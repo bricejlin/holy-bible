@@ -26,10 +26,16 @@ module.exports = (function () {
    * @return {Promise} returns String passage
    */
   bible.get = function (psg, ver) {
-    if (typeof psg !== 'string') { throw new TypeError('Expected a string'); }
+    if (typeof psg !== 'string') {
+      throw new TypeError('Passage should be a string');
+    }
+    if (typeof ver !== 'undefined' && typeof ver !== 'string') {
+      throw new TypeError('Version should be a string');
+    }
 
     var self = this;
     var v = ver || 'asv';
+    v = v.toLowerCase();
     // clean/normalize psg to bcv object
     var psgBCV = bcv.parse(psg).parsed_entities()[0].entities[0];
 
