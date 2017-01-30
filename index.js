@@ -23,9 +23,11 @@ module.exports = (function () {
    *
    * @param {String} psg - bible book/chapter/verse
    * @param {String} ver - bible version
+   * @param {Boolean} includeSuperscript - Flag to include verse superscript in
+   *    return text.
    * @return {Promise} returns String passage
    */
-  bible.get = function (psg, ver) {
+  bible.get = function (psg, ver, includeSuperscript) {
     if (typeof psg !== 'string') {
       throw new TypeError('Passage should be a string');
     }
@@ -34,8 +36,10 @@ module.exports = (function () {
     }
 
     var self = this;
+    var inclSup = includeSuperscript || false;
     var v = ver || 'asv';
     v = v.toLowerCase();
+
     // clean/normalize psg to bcv object
     var psgBCV = bcv.parse(psg).parsed_entities()[0].entities[0];
 
@@ -46,8 +50,9 @@ module.exports = (function () {
       var start = self._bcvToInd(psgBCV.start);
       var end = self._bcvToInd(psgBCV.end);
       var psgOsis = psgBCV.osis;
-      var text = (end - start === 0) ? self._getVerses(BIBLES[v], start)
-                                     : self._getVerses(BIBLES[v], start, end);
+      var text = (end - start === 0) ?
+        self._getVerses(BIBLES[v], start, null, inclSup) :
+        self._getVerses(BIBLES[v], start, end, inclSup);
 
       if (text) {
         var data = { version: v, passage: psgOsis, text: text };
@@ -79,22 +84,52 @@ module.exports = (function () {
    * @param {Object} bVersions - bible version object
    * @param {String} start - start index
    * @param {String} end - end index
+   * @param {Boolean} includeSuperscript - Indicate whether verse superscript
+   *    should be returned with text.
    * @return {String} bible passage
    */
-  bible._getVerses = function (bVersions, start, end) {
+  bible._getVerses = function (bVersions, start, end, includeSuperscript) {
     var s = VERSE_INDEX[start];
     var e = VERSE_INDEX[end];
     var arr = [];
 
     // Return single verse if no end
-    if (!e) { return bVersions[s]; }
+    if (!e) {
+      var prefix = includeSuperscript ? this._getVerseByVerseIndex(s) : '';
+      return prefix + bVersions[s];
+    }
 
-    for (var i = Number(s), len = Number(e);
-           i < len + 1; i++) {
-      arr.push(bVersions[i]);
+    var i = Number(s), len = Number(e);
+    if (includeSuperscript) {
+      for (; i < len + 1; i++) {
+        arr.push(this._getVerseByVerseIndex(i) + bVersions[i]);
+      }
+    } else {
+      for (; i < len + 1; i++) {
+        arr.push(bVersions[i]);
+      }
     }
 
     return arr.join(' ');
+  };
+
+  /**
+   * Convert a verse index value into the superscript verse number associated
+   *    with the passage.
+   *
+   * @param {number} value - Value of any key pair within the VERSE_INDEX object
+   * @returns {string} - The superscript verse associated with the passed index
+   *    value.
+   * @private
+   */
+  bible._getVerseByVerseIndex = function (value) {
+    for (var key in VERSE_INDEX) {
+      if (VERSE_INDEX.hasOwnProperty(key)) {
+        if (VERSE_INDEX[key] === value) {
+          return '<sup>' + Number(key.slice(-3)) + '</sup>';
+        }
+      }
+    }
   };
 
   return bible;
