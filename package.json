@@ -33,6 +33,6 @@
   },
   "devDependencies": {
     "blue-tape": "^0.1.8",
-    "eslint": "^0.24.0"
+    "eslint": "^6.7.2"
   }
 }
